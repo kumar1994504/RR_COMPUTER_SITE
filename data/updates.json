@@ -1,0 +1,26 @@
+[
+  {
+    "id": "update-1",
+    "tag": "NEW",
+    "tag_ta": "முக்கிய அறிவிப்பு",
+    "title": "Welcome to RR Computers E Sevai Maiyam - Govt Authorized e-Seva & CSC Digital Hub",
+    "title_ta": "RR கம்ப்யூட்டர்ஸ் இ-சேவை மையத்திற்கு அன்புடன் வரவேற்கிறோம்!",
+    "link": "services.html"
+  },
+  {
+    "id": "update-2",
+    "tag": "EXAMS",
+    "tag_ta": "தேர்வு பதிவு",
+    "title": "TNPSC Group 4 & Police Constable Online Registration is now open - Apply here!",
+    "title_ta": "TNPSC குரூப் 4 மற்றும் இரண்டாம் நிலை காவலர் தேர்வு விண்ணப்பங்கள் இங்கு பதிவு செய்யப்படுகின்றன!",
+    "link": "online-application.html"
+  },
+  {
+    "id": "update-3",
+    "tag": "SCHEMES",
+    "tag_ta": "நலத்திட்டம்",
+    "title": "PM-KISAN 19th Installment e-KYC & TN Farmer Registry (AgriStack) available here.",
+    "title_ta": "பி.எம் கிசான் 19-வது தவணை e-KYC மற்றும் உழவர் பதிவு (AgriStack) இங்கு உடனடியாகச் செய்து தரப்படும்.",
+    "link": "online-application.html"
+  }
+]

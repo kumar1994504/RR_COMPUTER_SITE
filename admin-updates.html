@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ta" data-lang="ta">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ஸ்க்ரோலிங் அறிவிப்பு மேலாண்மை - RR Computers</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/matisha-theme.css">
+  <style>
+    .adm-wrap { max-width: 960px; margin: 30px auto; padding: 0 16px; }
+    .adm-box { background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 16px; padding: 24px; box-shadow: var(--shadow-md); margin-bottom: 24px; }
+    .adm-box h2 { font-size: 20px; color: #0F2A44; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+    .preview-box { background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+    .preview-box b.p-lbl { display: block; font-size: 13px; color: #64748B; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .up-card { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 14px; transition: all 0.2s; }
+    .up-card:hover { border-color: #0F5C3A; box-shadow: var(--shadow-sm); }
+    .up-info { flex: 1; }
+    .up-badge { display: inline-block; background: #FEF3C7; color: #78350F; border: 1px solid #FDE68A; font-weight: 700; font-size: 12px; padding: 2px 10px; border-radius: 999px; margin-bottom: 6px; }
+    .up-badge.red { background: #FEE2E2; color: #991B1B; border-color: #F87171; }
+    .up-title { font-weight: 700; font-size: 15.5px; color: #0F172A; margin-bottom: 4px; }
+    .up-sub { font-size: 13.5px; color: #64748B; }
+    .up-acts { display: flex; gap: 8px; }
+    .btn-sm { padding: 6px 12px; font-size: 13px; border-radius: 8px; font-weight: 600; cursor: pointer; border: 1px solid #CBD5E1; background: #FFFFFF; color: #334155; }
+    .btn-sm:hover { background: #F1F5F9; }
+    .btn-sm.del { background: #FEE2E2; color: #B91C1C; border-color: #FCA5A5; }
+    .btn-sm.del:hover { background: #FCA5A5; }
+    .btn-pri { background: var(--brand-gradient); color: #FFFFFF; border: none; font-weight: 700; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 15px; }
+    .btn-pri:hover { opacity: 0.95; }
+    .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .f-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .f-group label { font-size: 13.5px; font-weight: 700; color: #334155; }
+    .f-group input, .f-group select { padding: 10px 12px; border: 1.5px solid #CBD5E1; border-radius: 8px; font-family: inherit; font-size: 15px; }
+    .f-group input:focus, .f-group select:focus { border-color: #0F5C3A; outline: none; }
+    .status-toast { padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; display: none; }
+    .status-toast.success { background: #D1FAE5; color: #065F46; border: 1px solid #34D399; }
+    .status-toast.error { background: #FEE2E2; color: #991B1B; border: 1px solid #F87171; }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="h-row">
+      <a href="index.html" class="brand">
+        <span class="brand-text">
+          <b>RR Computers</b>
+          <small>E Sevai Maiyam | Govt Authorized e-Seva & CSC Hub</small>
+        </span>
+      </a>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <a href="index.html" class="btn-sm">முகப்புத் தளம் (Home)</a>
+        <a href="admin.html" class="btn-sm">Admin Panel</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="adm-wrap">
+    <div id="toast" class="status-toast"></div>
+
+    <div class="preview-box">
+      <b class="p-lbl">லைவ் ஸ்க்ரோலிங் முன்னோட்டம் (Live Ticker Preview):</b>
+      <div id="ticker" class="ticker">
+        <span class="tk-label">அறிவிப்புகள்</span>
+        <div class="tk-view">
+          <div class="tk-track" id="tk-track"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="adm-box">
+      <h2>
+        <span>தற்போதைய அறிவிப்புகள் (<span id="up-count">0</span>)</span>
+        <button type="button" class="btn-pri" id="btn-save-all">💾 சேமிக்க (Save Updates)</button>
+      </h2>
+      <div id="up-list"></div>
+    </div>
+
+    <div class="adm-box">
+      <h2 id="form-heading">புதிய அறிவிப்பு சேர்க்க (Add New Announcement)</h2>
+      <form id="up-form">
+        <div class="f-row">
+          <div class="f-group">
+            <label>வகை (Tag):</label>
+            <select id="f-tag">
+              <option value="முக்கிய அறிவிப்பு|NOTICE">முக்கிய அறிவிப்பு (NOTICE)</option>
+              <option value="தேர்வு பதிவு|EXAMS">தேர்வு பதிவு (EXAMS)</option>
+              <option value="நலத்திட்டம்|SCHEMES">நலத்திட்டம் (SCHEMES)</option>
+              <option value="கல்லூரி சேர்க்கை|ADMISSION">கல்லூரி சேர்க்கை (ADMISSION)</option>
+              <option value="விடுமுறை அறிவிப்பு|HOLIDAY">விடுமுறை அறிவிப்பு (HOLIDAY)</option>
+              <option value="புதிய சேவை|NEW">புதிய சேவை (NEW)</option>
+            </select>
+          </div>
+          <div class="f-group">
+            <label>இணைப்பு (Link):</label>
+            <input type="text" id="f-link" value="services.html" placeholder="services.html அல்லது online-application.html">
+          </div>
+        </div>
+        <div class="f-group">
+          <label>தமிழ் செய்தி (Tamil Message):</label>
+          <input type="text" id="f-title-ta" required placeholder="எ.கா: TNPSC குரூப் 4 தேர்வு விண்ணப்பப் பதிவு தொடங்கியது!">
+        </div>
+        <div class="f-group">
+          <label>ஆங்கில செய்தி (English Message - விருப்பம்):</label>
+          <input type="text" id="f-title-en" placeholder="Enter English translation (optional)">
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button type="submit" class="btn-pri" id="btn-submit">+ பட்டியலில் சேர்க்க (Add to List)</button>
+          <button type="button" class="btn-sm" id="btn-reset">படிவம் அழிக்க (Reset)</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    let updates = [];
+    let editIndex = -1;
+
+    function showToast(msg, isErr) {
+      const t = document.getElementById('toast');
+      t.className = 'status-toast ' + (isErr ? 'error' : 'success');
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 4000);
+    }
+
+    function renderList() {
+      const listEl = document.getElementById('up-list');
+      const countEl = document.getElementById('up-count');
+      const trackEl = document.getElementById('tk-track');
+      countEl.textContent = updates.length;
+
+      if (!updates.length) {
+        listEl.innerHTML = '<p style="color:#64748B;padding:12px 0;">அறிவிப்புகள் எதுவும் இல்லை. கீழே உள்ள படிவத்தில் புதிய அறிவிப்பைச் சேர்க்கவும்.</p>';
+        trackEl.innerHTML = '<span style="padding:0 20px;color:#fff;">அறிவிப்புகள் எதுவும் இல்லை</span>';
+        return;
+      }
+
+      listEl.innerHTML = updates.map((u, i) => `
+        <div class="up-card">
+          <div class="up-info">
+            <span class="up-badge red">${u.tag_ta || u.tag || 'அறிவிப்பு'}</span>
+            <div class="up-title">${u.title_ta || u.title}</div>
+            <div class="up-sub">${u.title || ''} · <a href="${u.link || '#'}" target="_blank" style="color:#0F5C3A;">${u.link || 'services.html'}</a></div>
+          </div>
+          <div class="up-acts">
+            <button class="btn-sm" onclick="moveUp(${i})" title="மேலே நகர்த்து">▲</button>
+            <button class="btn-sm" onclick="moveDown(${i})" title="கீழே நகர்த்து">▼</button>
+            <button class="btn-sm" onclick="editItem(${i})">திருத்து</button>
+            <button class="btn-sm del" onclick="deleteItem(${i})">நீக்கு</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Render Live Ticker Preview
+      const tickerHtml = updates.map(u => `
+        <a href="${u.link || '#'}" class="tk-custom">
+          <b>${u.tag_ta || u.tag || 'NOTICE'}</b>${u.title_ta || u.title}
+        </a>
+      `).join('');
+      trackEl.innerHTML = tickerHtml + tickerHtml;
+    }
+
+    function moveUp(i) {
+      if (i > 0) {
+        const temp = updates[i];
+        updates[i] = updates[i - 1];
+        updates[i - 1] = temp;
+        renderList();
+      }
+    }
+
+    function moveDown(i) {
+      if (i < updates.length - 1) {
+        const temp = updates[i];
+        updates[i] = updates[i + 1];
+        updates[i + 1] = temp;
+        renderList();
+      }
+    }
+
+    function editItem(i) {
+      editIndex = i;
+      const u = updates[i];
+      document.getElementById('f-title-ta').value = u.title_ta || '';
+      document.getElementById('f-title-en').value = u.title || '';
+      document.getElementById('f-link').value = u.link || 'services.html';
+      
+      const tagSelect = document.getElementById('f-tag');
+      const valMatch = Array.from(tagSelect.options).find(o => o.value.startsWith(u.tag_ta));
+      if (valMatch) tagSelect.value = valMatch.value;
+
+      document.getElementById('form-heading').textContent = 'அறிவிப்பைத் திருத்து (Edit Announcement #' + (i + 1) + ')';
+      document.getElementById('btn-submit').textContent = '✔ மாற்றங்களை ஏற்க (Apply Edit)';
+      document.getElementById('f-title-ta').focus();
+    }
+
+    function deleteItem(i) {
+      if (confirm('இந்த அறிவிப்பை நீக்க வேண்டுமா?')) {
+        updates.splice(i, 1);
+        renderList();
+        showToast('அறிவிப்பு நீக்கப்பட்டது. மாற்றங்களைச் சேமிக்க மறக்காதீர்கள்.', false);
+      }
+    }
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      editIndex = -1;
+      document.getElementById('up-form').reset();
+      document.getElementById('f-link').value = 'services.html';
+      document.getElementById('form-heading').textContent = 'புதிய அறிவிப்பு சேர்க்க (Add New Announcement)';
+      document.getElementById('btn-submit').textContent = '+ பட்டியலில் சேர்க்க (Add to List)';
+    });
+
+    document.getElementById('up-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const titleTa = document.getElementById('f-title-ta').value.trim();
+      const titleEn = document.getElementById('f-title-en').value.trim() || titleTa;
+      const link = document.getElementById('f-link').value.trim() || 'services.html';
+      const [tagTa, tagEn] = document.getElementById('f-tag').value.split('|');
+
+      const item = {
+        id: editIndex >= 0 ? updates[editIndex].id : 'update-' + Date.now(),
+        tag: tagEn,
+        tag_ta: tagTa,
+        title: titleEn,
+        title_ta: titleTa,
+        link: link
+      };
+
+      if (editIndex >= 0) {
+        updates[editIndex] = item;
+        showToast('அறிவிப்பு மாற்றப்பட்டது! சேமிக்க மறக்காதீர்கள்.', false);
+        editIndex = -1;
+      } else {
+        updates.unshift(item);
+        showToast('புதிய அறிவிப்பு பட்டியலில் சேர்க்கப்பட்டது!', false);
+      }
+
+      renderList();
+      document.getElementById('btn-reset').click();
+    });
+
+    document.getElementById('btn-save-all').addEventListener('click', async () => {
+      try {
+        const res = await fetch('/api/updates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updates, null, 2)
+        });
+        if (res.ok) {
+          showToast('வெற்றிகரமாகச் சேமிக்கப்பட்டது! தளத்தில் நேரலையாக மாற்றப்பட்டது.', false);
+        } else {
+          throw new Error('API save failed');
+        }
+      } catch (err) {
+        // Fallback for file:// or static server
+        const blob = new Blob([JSON.stringify(updates, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'updates.json';
+        a.click();
+        showToast('updates.json பதிவிறக்கம் செய்யப்பட்டது! இதை data/updates.json இடத்தில் மாற்றவும்.', false);
+      }
+    });
+
+    // Load initial updates
+    fetch('data/updates.json', { cache: 'no-cache' })
+      .then(res => res.json())
+      .then(data => {
+        updates = Array.isArray(data) ? data : [];
+        renderList();
+      })
+      .catch(err => {
+        console.warn('Could not load data/updates.json directly:', err);
+        renderList();
+      });
+  </script>
+</body>
+</html>
+

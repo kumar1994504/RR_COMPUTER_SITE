@@ -1,0 +1,20 @@
+{
+  "name": "matisha-infotec",
+  "version": "1.0.0",
+  "description": "RR Computers - Govt Authorized e-Seva & CSC Portal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "esevai",
+    "csc",
+    "tamilnadu",
+    "land-records",
+    "signature-validator"
+  ],
+  "author": "RR Computers",
+  "license": "ISC"
+}
+

@@ -1,0 +1,24 @@
+[
+  {
+    "id": "lead_1793598909467_ylr8",
+    "t": 1793598909468,
+    "type": "request",
+    "rate": 0,
+    "msg": "TQWTTTTTTTTT",
+    "contact": "",
+    "page": "index.html",
+    "lang": "en",
+    "status": "open"
+  },
+  {
+    "id": "lead_1793596330197_kvf1",
+    "t": 1793596330200,
+    "type": "idea",
+    "rate": 0,
+    "msg": "test for mail",
+    "contact": "",
+    "page": "validate.html",
+    "lang": "en",
+    "status": "open"
+  }
+]
